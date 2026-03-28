@@ -1,4 +1,4 @@
-@extends('layouts.app') ///Optiene el codigo html base
+@extends('Layouts.app') ///Optiene el codigo html base
 @section('content') ///Seccion del contenido
     <div class="bg-white shadow-md rounded-lg p-6">
         <h2 class="text-xl font-bold text-gray-800 mb-4">Registro de Estudiante</h2>

@@ -1,71 +1,117 @@
-@extends('layouts.app')
+@extends('Layouts.app')
 
 @section('content')
-<div class="container mx-auto px-4 sm:px-8 max-w-3xl">
-    <div class="py-8">
-        <h2 class="text-2xl leading-tight font-bold text-gray-800 mb-6">Crear Nuevo Horario</h2>
+<div class="container mx-auto px-4 sm:px-8 max-w-5xl py-8">
+    
+    <div class="flex flex-row mb-6 justify-between items-center w-full">
+        <h2 class="text-2xl font-bold text-gray-800">Crear Nuevo Horario</h2>
+    </div>
 
-        {{-- Alerta de éxito --}}
-        @if(session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                {{ session('success') }}
-            </div>
-        @endif
+    @if(session('success'))
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded mb-6 shadow-sm">
+            {{ session('success') }}
+        </div>
+    @endif
 
-        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <form action="{{ route('admin.horarios.store') }}" method="POST">
-                @csrf
+    @if($errors->any())
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded mb-6 shadow-sm">
+            {{ $errors->first() }}
+        </div>
+    @endif
 
-                {{-- Selección de Materia --}}
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="materia_id">Materia</label>
-                    <select name="materia_id" id="materia_id" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                        <option value="">Selecciona una materia...</option>
+    <div class="bg-white shadow-md rounded-xl p-8 mb-12">
+        <form action="{{ route('admin.horarios.store') }}" method="POST">
+            @csrf
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="materia_id" class="block text-sm font-semibold text-gray-700 mb-2">Materia</label>
+                    <select name="materia_id" id="materia_id" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 bg-gray-50 focus:bg-white" required>
+                        <option value="" disabled selected>Selecciona una materia...</option>
                         @foreach($materias as $materia)
                             <option value="{{ $materia->id }}">{{ $materia->nombre }} ({{ $materia->clave }})</option>
                         @endforeach
                     </select>
                 </div>
 
-                {{-- Selección de Maestro --}}
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="usuario_id">Maestro</label>
-                    <select name="usuario_id" id="usuario_id" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                        <option value="">Selecciona un maestro...</option>
+                <div>
+                    <label for="usuario_id" class="block text-sm font-semibold text-gray-700 mb-2">Maestro</label>
+                    <select name="usuario_id" id="usuario_id" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 bg-gray-50 focus:bg-white" required>
+                        <option value="" disabled selected>Selecciona un maestro...</option>
+                        
                         @foreach($maestros as $maestro)
-                            <option value="{{ $maestro->id }}">{{ $maestro->nombre }}</option>
+                            <option value="{{ $maestro->id }}">{{ $maestro->name }}</option>
                         @endforeach
+
                     </select>
                 </div>
 
-                {{-- Horas --}}
-                <div class="flex flex-wrap -mx-3 mb-4">
-                    <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="hora_inicio">Hora de Inicio</label>
-                        <input type="time" name="hora_inicio" id="hora_inicio" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                    </div>
-                    <div class="w-full md:w-1/2 px-3">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="hora_fin">Hora de Fin</label>
-                        <input type="time" name="hora_fin" id="hora_fin" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                    </div>
+                <div>
+                    <label for="dias" class="block text-sm font-semibold text-gray-700 mb-2">Días de la semana</label>
+                    <input type="text" name="dias" id="dias" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 bg-gray-50 focus:bg-white" placeholder="Ej. Lunes a Viernes, L-M-V" required>
                 </div>
 
-                {{-- Días --}}
-                <div class="mb-6">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="dias">Días de la semana</label>
-                    <input type="text" name="dias" id="dias" placeholder="Ej. Lunes a Viernes, L-M-V" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="hora_inicio" class="block text-sm font-semibold text-gray-700 mb-2">Hora Inicio</label>
+                        <input type="time" name="hora_inicio" id="hora_inicio" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 bg-gray-50 focus:bg-white" required>
+                    </div>
+                    <div>
+                        <label for="hora_fin" class="block text-sm font-semibold text-gray-700 mb-2">Hora Fin</label>
+                        <input type="time" name="hora_fin" id="hora_fin" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 bg-gray-50 focus:bg-white" required>
+                    </div>
                 </div>
+            </div>
 
-                <div class="flex items-center justify-between">
-                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                        Guardar Horario
-                    </button>
-                    <a href="#" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
-                        Volver
-                    </a>
-                </div>
-            </form>
-        </div>
+            <div class="mt-8 flex justify-end">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-md transition transform hover:-translate-y-0.5">
+                    Guardar Horario
+                </button>
+            </div>
+        </form>
     </div>
+
+    <h3 class="text-xl font-bold text-gray-800 mb-4">Horarios Registrados</h3>
+    
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <table class="min-w-full leading-normal">
+            <thead>
+                <tr>
+                    <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Materia</th>
+                    <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Maestro</th>
+                    <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Días</th>
+                    <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Hora</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($horarios_creados as $horario)
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                            <p class="text-gray-900 font-bold whitespace-no-wrap">{{ $horario->materia->nombre ?? 'N/A' }}</p>
+                            <p class="text-gray-500 text-xs">{{ $horario->materia->clave ?? '' }}</p>
+                        </td>
+                        <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                            <p class="text-gray-900 whitespace-no-wrap">{{ $horario->maestro->name ?? 'N/A' }}</p>
+                        </td>
+                        <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                            <p class="text-gray-900 whitespace-no-wrap">{{ $horario->dias }}</p>
+                        </td>
+                        <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                            <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded border border-blue-200">
+                                {{ \Carbon\Carbon::parse($horario->hora_inicio)->format('H:i') }} - {{ \Carbon\Carbon::parse($horario->hora_fin)->format('H:i') }}
+                            </span>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="4" class="px-5 py-5 border-b border-gray-200 bg-white text-sm text-center text-gray-500">
+                            Aún no hay horarios registrados.
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
 </div>
 @endsection

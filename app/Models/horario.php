@@ -20,4 +20,11 @@ class horario extends Model
     {
         return $this->belongsTo(User::class, 'usuario_id');
     }
+
+    // Relación: Un horario tiene asignado un grupo
+    public function grupo()
+    {
+        // Un horario tiene un grupo (hasOne)
+        return $this->hasOne(Grupo::class, 'horario_id');
+    }
 }

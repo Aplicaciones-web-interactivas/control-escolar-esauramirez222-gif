@@ -11,19 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('inscripciones', function (Blueprint $table) {
+        Schema::create('tareas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('grupo_id')->constrained('grupos')->onDelete('cascade');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('grupo_id')->constrained()->onDelete('cascade'); // Relación con el grupo
+            $table->string('titulo');
+            $table->text('descripcion');
+            $table->timestamp('fecha_entrega')->nullable();
             $table->timestamps();
         });
     }
-
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('inscripciones');
+        Schema::dropIfExists('tareas');
     }
 };
